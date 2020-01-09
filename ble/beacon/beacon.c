@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+ * Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
  * Cypress Semiconductor Corporation. All Rights Reserved.
  *
  * This software, including source code, documentation and related
@@ -72,6 +72,8 @@
 #ifndef CYW43012C0
 #include "wiced_bt_ota_firmware_upgrade.h"
 #endif
+#include "wiced_hal_puart.h"
+#include "wiced_platform.h"
 
 
 /******************************************************************************
@@ -112,11 +114,7 @@ wiced_bt_beacon_multi_advert_data_t adv_param =
     .adv_type = MULTI_ADVERT_NONCONNECTABLE_EVENT,
     .channel_map = BTM_BLE_ADVERT_CHNL_37 | BTM_BLE_ADVERT_CHNL_38 | BTM_BLE_ADVERT_CHNL_39,
     .adv_filter_policy = BTM_BLE_ADVERT_FILTER_WHITELIST_CONNECTION_REQ_WHITELIST_SCAN_REQ,
-#if defined(CYW20719B2) || defined(CYW20721B2)
-    .adv_tx_power = MULTI_ADV_TX_POWER_MAX_INDEX,
-#else
     .adv_tx_power = MULTI_ADV_TX_POWER_MAX,
-#endif
     .peer_bd_addr = {0},
     .peer_addr_type = BLE_ADDR_PUBLIC,
     .own_bd_addr = {0},
@@ -168,11 +166,7 @@ static void beacon_set_ibeacon_advertisement_data(void);
  *  stack initialization.  The actual application initialization will happen
  *  when stack reports that BT device is ready.
  */
-#ifdef CYW20735B0
-void application_start(void)
-#else
 APPLICATION_START()
-#endif
 {
     wiced_bt_gatt_status_t gatt_status;
 #ifdef WICED_BT_TRACE_ENABLE
@@ -187,6 +181,9 @@ APPLICATION_START()
      */
 
     wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_PUART );
+#ifdef CYW20706A2
+    wiced_hal_puart_select_uart_pads( WICED_PUART_RXD, WICED_PUART_TXD, 0, 0);
+#endif
 
     // To set to HCI to see traces on HCI uart -
     // wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_HCI_UART );

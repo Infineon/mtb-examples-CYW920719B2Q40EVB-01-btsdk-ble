@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+ * Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
  * Cypress Semiconductor Corporation. All Rights Reserved.
  *
  * This software, including source code, documentation and related
@@ -429,8 +429,8 @@ static wiced_result_t thermistor_set_advertisement_data(void)
     num_elem++;
 
     adv_elem[num_elem].advert_type = BTM_BLE_ADVERT_TYPE_NAME_COMPLETE;
-    adv_elem[num_elem].len         = strlen((const char *) wiced_app_cfg_settings.device_name);
-    adv_elem[num_elem].p_data      = (uint8_t *) wiced_app_cfg_settings.device_name;
+    adv_elem[num_elem].len         = app_gap_device_name_len;
+    adv_elem[num_elem].p_data      = app_gap_device_name;
     num_elem++;
 
     adv_elem[num_elem].advert_type = BTM_BLE_ADVERT_TYPE_FLAG;

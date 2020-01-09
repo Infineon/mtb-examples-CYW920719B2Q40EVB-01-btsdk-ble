@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+ * Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
  * Cypress Semiconductor Corporation. All Rights Reserved.
  *
  * This software, including source code, documentation and related
@@ -74,6 +74,7 @@
 #include "wiced_bt_anc.h"
 #include "string.h"
 #include "wiced_bt_stack.h"
+#include "wiced_hal_puart.h"
 
 #define HCI_TRACE_OVER_TRANSPORT    1   // Send trace messages over WICED HCI interface
 //#define TEST_HCI_CONTROL            1   // Use WICED HCI interface for test purposes
@@ -231,11 +232,7 @@ static uint8_t c = 0;
  * stack initialization.  The actual application initialization will happen
  * when stack reports that BT device is ready
  */
-#ifndef CYW20735B0
 APPLICATION_START()
-#else
-void application_start( void )
-#endif
 {
     wiced_result_t result;
 
@@ -263,6 +260,9 @@ void application_start( void )
     wiced_set_debug_uart(WICED_ROUTE_DEBUG_TO_WICED_UART);
 #else
     wiced_set_debug_uart(WICED_ROUTE_DEBUG_TO_PUART);
+#ifdef CYW20706A2
+    wiced_hal_puart_select_uart_pads( WICED_PUART_RXD, WICED_PUART_TXD, 0, 0);
+#endif
 #endif
 
 #endif
@@ -433,6 +433,12 @@ static wiced_result_t anc_management_callback(wiced_bt_management_evt_t event, w
     case BTM_BLE_ADVERT_STATE_CHANGED_EVT:
         p_mode = &p_event_data->ble_advert_state_changed;
         WICED_BT_TRACE( "Advertisement State Change: %d\n", *p_mode);
+
+        // Start advertisement if not connected
+        if ( (p_event_data->ble_advert_state_changed == BTM_BLE_ADVERT_OFF) && (anc_app_state.conn_id == 0) )
+        {
+            wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
+        }
         break;
 
     default:
@@ -514,6 +520,7 @@ static void anc_connection_up(wiced_bt_gatt_connection_status_t *p_conn_status)
 
 static void anc_connection_down(wiced_bt_gatt_connection_status_t *p_conn_status)
 {
+    wiced_bt_gatt_status_t  status;
     WICED_BT_TRACE("%s\n", __FUNCTION__);
 
     anc_app_state.conn_id         = 0;
@@ -528,6 +535,9 @@ static void anc_connection_down(wiced_bt_gatt_connection_status_t *p_conn_status
     wiced_bt_anc_client_connection_down(p_conn_status);
 
     hci_control_send_anc_disabled();
+
+    status =  wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
+    WICED_BT_TRACE("wiced_bt_start_advertisements %d\n", status);
 }
 
 /*
@@ -1544,7 +1554,20 @@ void anc_handle_get_version(void)
 {
     uint8_t   tx_buf[20];
     uint8_t   cmd = 0;
+// If this is 20819 or 20820, we do detect the device from hardware
+#define RADIO_ID    0x006007c0
+#define RADIO_20820 0x80
+#define CHIP_20820  20820
+#define CHIP_20819  20819
+#if (CHIP==CHIP_20819) || (CHIP==CHIP_20820)
+    uint32_t chip = CHIP_20819;
+    if (*(UINT32*) RADIO_ID & RADIO_20820)
+    {
+        chip = CHIP_20820;
+    }
+#else
     uint32_t  chip = CHIP;
+#endif
 
     tx_buf[cmd++] = WICED_SDK_MAJOR_VER;
     tx_buf[cmd++] = WICED_SDK_MINOR_VER;

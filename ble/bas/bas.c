@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+ * Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
  * Cypress Semiconductor Corporation. All Rights Reserved.
  *
  * This software, including source code, documentation and related
@@ -186,11 +186,7 @@ static void                       battery_service_hci_trace_cback( wiced_bt_hci_
  *  stack initialization.  The actual application initialization will happen
  *  when stack reports that BT device is ready.
  */
-#ifndef CYW20735B0
 APPLICATION_START( )
-#else
-void application_start( void )
-#endif
 {
     wiced_transport_init( &transport_cfg );
 

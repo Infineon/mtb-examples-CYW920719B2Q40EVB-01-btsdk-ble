@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+ * Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
  * Cypress Semiconductor Corporation. All Rights Reserved.
  *
  * This software, including source code, documentation and related
@@ -58,8 +58,7 @@
 * configuration (for example to start or stop new alerts/unread alerts and to configure to send
 * only requested alert categories.)
 *
-* To test this snippet app use ClientControl application -
-* \apps\host\ClientControl\<OS>\ClientControl
+* To test this snippet app use ClientControl application
 *
 * Features demonstrated
 *  - Initialize and use WICED BT ANS library
@@ -152,6 +151,7 @@ static void                   ans_handle_get_version(void);
 static void                   ans_transport_status( wiced_transport_type_t type );
 static uint32_t               ans_proc_rx_hci_cmd(uint8_t *p_data, uint32_t length);
 static void                   ans_trace_callback(wiced_bt_hci_trace_type_t type, uint16_t length, uint8_t* p_data);
+static void                   ans_start_scan (void);
 
 #ifdef ANS_UNIT_TESTING
 static void                   ans_app_timeout( uint32_t arg );
@@ -207,11 +207,7 @@ wiced_transport_buffer_pool_t*  host_trans_pool;
  * stack initialization.  The actual application initialization will happen
  * when stack reports that BT device is ready
  */
-#if (defined (CYW20735B0) || defined(CYW20735B1))
-void application_start( void )
-#else
 APPLICATION_START()
-#endif
 {
     wiced_result_t result;
     wiced_transport_init(&transport_cfg);
@@ -401,6 +397,11 @@ wiced_result_t ans_management_callback(wiced_bt_management_evt_t event, wiced_bt
 
     case BTM_BLE_SCAN_STATE_CHANGED_EVT:
         WICED_BT_TRACE( "Scan State Change: %d\n", p_event_data->ble_scan_state_changed );
+        if ( (p_event_data->ble_scan_state_changed == BTM_BLE_SCAN_TYPE_NONE) && (ans_app_cb.conn_id == 0))
+        {
+            //start scan if not connected
+            ans_start_scan();
+        }
         break;
 
     default:
@@ -1065,7 +1066,20 @@ void ans_handle_get_version(void)
 {
     uint8_t   tx_buf[20];
     uint8_t   cmd = 0;
+// If this is 20819 or 20820, we do detect the device from hardware
+#define RADIO_ID    0x006007c0
+#define RADIO_20820 0x80
+#define CHIP_20820  20820
+#define CHIP_20819  20819
+#if (CHIP==CHIP_20819) || (CHIP==CHIP_20820)
+    uint32_t chip = CHIP_20819;
+    if (*(UINT32*) RADIO_ID & RADIO_20820)
+    {
+        chip = CHIP_20820;
+    }
+#else
     uint32_t  chip = CHIP;
+#endif
 
     tx_buf[cmd++] = WICED_SDK_MAJOR_VER;
     tx_buf[cmd++] = WICED_SDK_MINOR_VER;

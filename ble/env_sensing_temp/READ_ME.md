@@ -6,6 +6,7 @@
 ### Requirements
 
 [ModusToolbox™ IDE](https://www.cypress.com/products/modustoolbox-software-environment) v 2.0
+
 Programming Language: C
 
 Associated Parts: CYW20819, CYW20820, CYW20719

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+ * Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
  * Cypress Semiconductor Corporation. All Rights Reserved.
  *
  * This software, including source code, documentation and related
@@ -59,7 +59,6 @@ app_bt_adv_conn_mode_t app_bt_adv_conn_state = APP_BT_ADV_OFF_CONN_OFF;
 /*******************************************************************************
 *        External Variable Declarations
 *******************************************************************************/
-extern uint8_t BT_LOCAL_NAME[];
 
 /*******************************************************************************
 *        Function Prototypes
@@ -270,8 +269,8 @@ static void ble_app_set_advertisement_data(void)
 
     /* Advertisement Element for Name */
     adv_elem[num_elem].advert_type = BTM_BLE_ADVERT_TYPE_NAME_COMPLETE;
-    adv_elem[num_elem].len = strlen((const char*)BT_LOCAL_NAME);
-    adv_elem[num_elem].p_data = BT_LOCAL_NAME;
+    adv_elem[num_elem].len = app_gap_device_name_len;
+    adv_elem[num_elem].p_data = app_gap_device_name;
     num_elem++;
 
     /* Advertisement Element for Appearance */

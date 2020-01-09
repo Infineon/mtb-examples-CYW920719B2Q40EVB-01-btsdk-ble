@@ -1,5 +1,5 @@
 #
-# Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+# Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
 # Cypress Semiconductor Corporation. All Rights Reserved.
 #
 # This software, including source code, documentation and related
@@ -94,7 +94,7 @@ BT_DEVICE_ADDRESS?=default
 UART?=AUTO
 XIP?=xip
 TRANSPORT?=UART
-ENABLE_DEBUG?=0
+export ENABLE_DEBUG?=0
 
 # wait for SWD attach
 ifeq ($(ENABLE_DEBUG),1)
@@ -185,7 +185,7 @@ CY_BT_APP_TOOLS=BTSpy ClientControl
 CY_GETLIBS_PATH=.
 
 # paths to shared_libs targets
-SEARCH_LIBS_AND_INCLUDES=$(CY_BSP_PATH) $(CY_BASELIB_PATH) $(CY_SHARED_PATH)/dev-kit/libraries/btsdk-ble
+SEARCH_LIBS_AND_INCLUDES=$(CY_BSP_PATH) $(CY_BASELIB_PATH) $(CY_SHARED_PATH)/dev-kit/libraries/btsdk-ble $(CY_SHARED_PATH)/dev-kit/libraries/btsdk-drivers
 ifeq ($(OTA_FW_UPGRADE),1)
 SEARCH_LIBS_AND_INCLUDES+=$(CY_SHARED_PATH)/dev-kit/libraries/btsdk-ota
 endif

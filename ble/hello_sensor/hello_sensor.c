@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+ * Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
  * Cypress Semiconductor Corporation. All Rights Reserved.
  *
  * This software, including source code, documentation and related
@@ -311,11 +311,7 @@ static void                     hello_sensor_interrput_config (void);
  *  stack initialization.  The actual application initialization will happen
  *  when stack reports that BT device is ready.
  */
-#if defined(CYW20735B1 ) || defined(CYW20735B0)
-void application_start( void )
-#else
 APPLICATION_START( )
-#endif
 {
     wiced_transport_init( &transport_cfg );
 
