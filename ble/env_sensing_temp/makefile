@@ -105,6 +105,7 @@ CY_APP_DEFINES+=\
     -DWICED_BT_TRACE_ENABLE
 
 ifeq ($(OTA_FW_UPGRADE),1)
+CY_BT_APP_TOOLS+=WsOtaUpgrade
 OTA_SEC_FW_UPGRADE ?= 0
 ifeq ($(OTA_SEC_FW_UPGRADE), 1)
 CY_APP_DEFINES += -DOTA_SECURE_FIRMWARE_UPGRADE
@@ -138,6 +139,8 @@ CY_APP_PATH=.
 
 # Path (absolute or relative) to the bt-sdk folder (at repo root)
 CY_SHARED_PATH=$(CY_APP_PATH)/../../../wiced_btsdk
+# absolute path to the root of the BTSDK
+CY_SHARED_PATH_ABS=$(CURDIR)/../../../wiced_btsdk
 
 # Path (absolute or relative) to the base library
 CY_BASELIB_PATH=$(CY_SHARED_PATH)/dev-kit/baselib/$(CY_TARGET_DEVICE)
@@ -179,7 +182,7 @@ endif
 CY_WICED_TOOLS_ROOT?=$(CY_SHARED_PATH)/dev-kit/btsdk-tools
 
 # tools that can be launched with "make open CY_OPEN_TYPE=<tool>
-CY_BT_APP_TOOLS=BTSpy ClientControl
+CY_BT_APP_TOOLS+=BTSpy ClientControl
 
 # getlibs path
 CY_GETLIBS_PATH=.

@@ -393,10 +393,15 @@ APPLICATION_START( )
     // Set the debug uart as WICED_ROUTE_DEBUG_NONE to get rid of prints
     // wiced_set_debug_uart(WICED_ROUTE_DEBUG_NONE);
 
+#ifdef NO_PUART_SUPPORT
+    // if a board does not have PUART support, route to WICED UART by default, see below
+    wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_WICED_UART );
+#else
     // Set to PUART to see traces on peripheral uart(puart)
     wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_PUART );
 #if ( defined(CYW20706A2) || defined(CYW20735B0) || defined(CYW20719B0) || defined(CYW43012C0) )
     wiced_hal_puart_select_uart_pads( WICED_PUART_RXD, WICED_PUART_TXD, 0, 0);
+#endif
 #endif
 
     // Set to HCI to see traces on HCI uart - default if no call to wiced_set_debug_uart()
@@ -404,8 +409,6 @@ APPLICATION_START( )
 
     // Use WICED_ROUTE_DEBUG_TO_WICED_UART to send formatted debug strings over the WICED
     // HCI debug interface to be parsed by ClientControl/BtSpy.
-    // Note: WICED HCI must be configured to use this - see wiced_trasnport_init(), must
-    // be called with wiced_transport_cfg_t.wiced_tranport_data_handler_t callback present
     // wiced_set_debug_uart(WICED_ROUTE_DEBUG_TO_WICED_UART);
 #endif
 

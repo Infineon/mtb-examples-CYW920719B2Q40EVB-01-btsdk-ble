@@ -680,7 +680,8 @@ void le_coc_send_to_client_control(uint16_t code, uint8_t* p_data, uint16_t leng
         if (dataPtr)
         {
             memcpy(dataPtr, p_data, length);
-            wiced_transport_send_buffer(code, dataPtr, length);
+            if(wiced_transport_send_buffer(code, dataPtr, length) !=  WICED_SUCCESS)
+                WICED_BT_TRACE("[%s] wiced_transport_send_buffer failed 0x%x length %d \r\n", __func__, code, length);
         }
     }
 }

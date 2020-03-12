@@ -319,7 +319,7 @@ APPLICATION_START( )
     // Set the debug uart as WICED_ROUTE_DEBUG_NONE to get rid of prints
     // wiced_set_debug_uart(WICED_ROUTE_DEBUG_NONE);
 
-#ifdef CYW43012C0
+#ifdef NO_PUART_SUPPORT
     // Set to HCI to see traces on HCI uart - default if no call to wiced_set_debug_uart()
     wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_WICED_UART );
 #else

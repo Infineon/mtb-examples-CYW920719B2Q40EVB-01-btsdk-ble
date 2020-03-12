@@ -292,14 +292,14 @@ static void beacon_set_eddystone_url_advertisement_data(void)
     uint8_t adv_len_url = 0;
 
     /* Set sample values for Eddystone URL*/
-    uint8_t tx_power = 0x01;
+    uint8_t beacon_tx_power = 0x01;
     uint8_t urlscheme = EDDYSTONE_URL_SCHEME_0;
     uint8_t encoded_url[EDDYSTONE_URL_VALUE_MAX_LEN] = "cypress.com";
 
     memset(adv_data_url, 0, 31);
 
     /* Call Eddystone URL api to prepare adv data*/
-    wiced_bt_eddystone_set_data_for_url(tx_power, urlscheme, encoded_url, adv_data_url, &adv_len_url);
+    wiced_bt_eddystone_set_data_for_url(beacon_tx_power, urlscheme, encoded_url, adv_data_url, &adv_len_url);
 
     /* Sets adv data for multi adv instance*/
     wiced_set_multi_advertisement_data(adv_data_url, adv_len_url, BEACON_EDDYSTONE_URL);
