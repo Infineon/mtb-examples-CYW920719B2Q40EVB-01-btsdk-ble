@@ -74,6 +74,7 @@
 #endif
 #include "wiced_hal_puart.h"
 #include "wiced_platform.h"
+#include "wiced_transport.h"
 
 
 /******************************************************************************
@@ -130,6 +131,29 @@ uint16_t      beacon_conn_id = 0;
 
 extern const wiced_bt_cfg_settings_t app_cfg_settings;
 extern const wiced_bt_cfg_buf_pool_t app_buf_pools[];
+
+/* transport configuration, needed for WICED HCI traces */
+const wiced_transport_cfg_t transport_cfg =
+{
+    .type = WICED_TRANSPORT_UART,
+    .cfg =
+    {
+        .uart_cfg =
+        {
+            .mode = WICED_TRANSPORT_UART_HCI_MODE,
+            .baud_rate =  HCI_UART_DEFAULT_BAUD
+        },
+    },
+    .rx_buff_pool_cfg =
+    {
+        .buffer_size = 0,
+        .buffer_count = 0
+    },
+    .p_status_handler = NULL,
+    .p_data_handler = NULL,
+    .p_tx_complete_cback = NULL
+};
+
 /******************************************************************************
  *                             Local Function Definitions
  ******************************************************************************/
@@ -169,6 +193,9 @@ static void beacon_set_ibeacon_advertisement_data(void);
 APPLICATION_START()
 {
     wiced_bt_gatt_status_t gatt_status;
+
+    wiced_transport_init( &transport_cfg );
+
 #ifdef WICED_BT_TRACE_ENABLE
     /*
      * Set the debug uart to enable the debug traces
@@ -179,10 +206,13 @@ APPLICATION_START()
      * For disabling the traces set the UART type as WICED_ROUTE_DEBUG_NONE, and
      * For sending debug strings over the WICED debug interface set the UART type as WICED_ROUTE_DEBUG_TO_WICED_UART
      */
-
+#ifdef NO_PUART_SUPPORT
+    wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_WICED_UART );
+#else
     wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_PUART );
 #ifdef CYW20706A2
     wiced_hal_puart_select_uart_pads( WICED_PUART_RXD, WICED_PUART_TXD, 0, 0);
+#endif
 #endif
 
     // To set to HCI to see traces on HCI uart -

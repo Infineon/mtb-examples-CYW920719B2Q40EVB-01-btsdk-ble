@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Design version="12" xmlns="http://cypress.com/xsd/cydesignfile_v3">
-    <ToolInfo version="1.0.0"/>
+    <ToolInfo version="2.1.0.1266"/>
     <Devices>
         <Device mpn="CYW20721B2KUMLG">
             <BlockConfig>
@@ -60,9 +60,6 @@
                         <Param id="InterruptEnable" value="false"/>
                         <Param id="InterruptTrigger" value="GPIO_EN_INT_RISING_EDGE"/>
                     </Personality>
-                </Block>
-                <Block location="ioss[0].pin[1]">
-                    <Alias value="I2S_DI"/>
                 </Block>
                 <Block location="ioss[0].pin[25]">
                     <Alias value="SPI_CS"/>
@@ -137,9 +134,6 @@
                         <Param id="InterruptTrigger" value="GPIO_EN_INT_RISING_EDGE"/>
                     </Personality>
                 </Block>
-                <Block location="ioss[0].pin[38]">
-                    <Alias value="I2S_CLK"/>
-                </Block>
                 <Block location="ioss[0].pin[4]">
                     <Alias value="BUTTON_CUSTOM"/>
                     <Personality template="20x19_pin" version="1.0">
@@ -165,9 +159,6 @@
                         <Param id="InterruptEnable" value="false"/>
                         <Param id="InterruptTrigger" value="GPIO_EN_INT_RISING_EDGE"/>
                     </Personality>
-                </Block>
-                <Block location="ioss[0].pin[7]">
-                    <Alias value="I2S_WS"/>
                 </Block>
                 <Block location="spi[1]">
                     <Personality template="20x19_spi" version="1.0"/>
@@ -208,8 +199,5 @@
             </Netlist>
         </Device>
     </Devices>
-    <Libraries>
-        <Library name="bt_sdk" version="1.1"/>
-    </Libraries>
     <ConfiguratorData/>
 </Design>

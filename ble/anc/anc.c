@@ -256,7 +256,7 @@ APPLICATION_START()
     // HCI debug interface to be parsed by ClientControl/BtSpy
     // Note: WICED HCI must be configured to use this - see wiced_trasnport_init(), must
     // be called with wiced_transport_cfg_t.wiced_trancort_data_handler_t callback present
-#ifdef TEST_HCI_CONTROL
+#if defined TEST_HCI_CONTROL || defined NO_PUART_SUPPORT
     wiced_set_debug_uart(WICED_ROUTE_DEBUG_TO_WICED_UART);
 #else
     wiced_set_debug_uart(WICED_ROUTE_DEBUG_TO_PUART);
@@ -434,11 +434,6 @@ static wiced_result_t anc_management_callback(wiced_bt_management_evt_t event, w
         p_mode = &p_event_data->ble_advert_state_changed;
         WICED_BT_TRACE( "Advertisement State Change: %d\n", *p_mode);
 
-        // Start advertisement if not connected
-        if ( (p_event_data->ble_advert_state_changed == BTM_BLE_ADVERT_OFF) && (anc_app_state.conn_id == 0) )
-        {
-            wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
-        }
         break;
 
     default:
@@ -520,7 +515,6 @@ static void anc_connection_up(wiced_bt_gatt_connection_status_t *p_conn_status)
 
 static void anc_connection_down(wiced_bt_gatt_connection_status_t *p_conn_status)
 {
-    wiced_bt_gatt_status_t  status;
     WICED_BT_TRACE("%s\n", __FUNCTION__);
 
     anc_app_state.conn_id         = 0;
@@ -535,9 +529,6 @@ static void anc_connection_down(wiced_bt_gatt_connection_status_t *p_conn_status
     wiced_bt_anc_client_connection_down(p_conn_status);
 
     hci_control_send_anc_disabled();
-
-    status =  wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
-    WICED_BT_TRACE("wiced_bt_start_advertisements %d\n", status);
 }
 
 /*
