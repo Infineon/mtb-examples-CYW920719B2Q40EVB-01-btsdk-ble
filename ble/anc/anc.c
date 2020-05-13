@@ -1095,22 +1095,6 @@ void anc_trace_callback(wiced_bt_hci_trace_type_t type, uint16_t length, uint8_t
 }
 #endif
 
-/*
- * This utility copies a character string to another
- */
-char *utl_strcpy(char *p_dst, char *p_src)
-{
-    register char *pd = p_dst;
-    register char *ps = p_src;
-
-    while (*ps)
-        *pd++ = *ps++;
-
-    *pd++ = 0;
-
-    return (p_dst);
-}
-
 static void hci_control_send_anc_enabled( void )
 {
     WICED_BT_TRACE( "[%s] \n", __FUNCTION__ );
