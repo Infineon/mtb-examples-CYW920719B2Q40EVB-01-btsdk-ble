@@ -1,5 +1,5 @@
 #
-# Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
+# Copyright 2016-2020, Cypress Semiconductor Corporation or a subsidiary of
 # Cypress Semiconductor Corporation. All Rights Reserved.
 #
 # This software, including source code, documentation and related
@@ -122,6 +122,11 @@ CY_APP_DEFINES+=\
 # Components (middleware libraries)
 #
 COMPONENTS +=bsp_design_modus
+ifeq ($(TARGET),CYW920721B2EVK-03)
+# use app specific design.modus
+DISABLE_COMPONENTS+=bsp_design_modus
+COMPONENTS+=CYW920721B2EVK-03_design_modus
+endif
 
 ################################################################################
 # Paths

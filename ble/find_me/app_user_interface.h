@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, Cypress Semiconductor Corporation or a subsidiary of
+ * Copyright 2016-2020, Cypress Semiconductor Corporation or a subsidiary of
  * Cypress Semiconductor Corporation. All Rights Reserved.
  *
  * This software, including source code, documentation and related
@@ -55,7 +55,12 @@
 *******************************************************************************/
 /* LED pin assignments for advertising event and IAS alert levels */
 #define ADV_LED_GPIO                    WICED_GET_PIN_FOR_LED(WICED_PLATFORM_LED_1)
+#ifndef COMPONENT_CYW920721B2EVK_03_design_modus
 #define IAS_LED_GPIO                    WICED_GET_PIN_FOR_LED(WICED_PLATFORM_LED_2)
+#else
+/* the EVK-03 kit does not have LED2, use LED1 for both functions */
+#define IAS_LED_GPIO                    WICED_GET_PIN_FOR_LED(WICED_PLATFORM_LED_1)
+#endif
 
 /* Update rate of LED's in milliseconds when blinking */
 #define ADV_LED_UPDATE_RATE_MS          250

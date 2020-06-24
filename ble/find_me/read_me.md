@@ -17,13 +17,7 @@ This document uses CYW20819 as the reference, but the example and instructions i
 
 See the `makefile` file for a detailed list of supported kits.
 
-**NOTE**: `LED2` is not available on CYW920721B2EVK-03 platform. Use device-configurator to reconfigure `P28` as LED output to enable `LED1`. Change code in `app_user_interface.h` by modifying line 1 as shown in line 2.
-```
-(LINE 1) #define IAS_LED_GPIO                WICED_GET_PIN_FOR_LED(WICED_PLATFORM_LED_2)
-```
-```
-(LINE 2) #define IAS_LED_GPIO                WICED_GET_PIN_FOR_LED(WICED_PLATFORM_LED_1)
-```
+**NOTE**: `LED2` is not available on CYW920721B2EVK-03 platform. And the default configuration for that board has no GPIO assigned for `LED1`.  So an application specific design.modus is used to free GPIO P28 from the I2S interface and configure it as an LED with index = 1, output, default=High.  And `LED1` is used for both Advertising and Alert Level functionality on that board.
 
 ## Hardware Setup
 This example uses the kit’s default configuration. Refer to the [kit guide](http://www.cypress.com/CYW920819EVB-02), if required, to ensure the kit is configured correctly.
